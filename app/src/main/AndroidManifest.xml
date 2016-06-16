@@ -28,6 +28,10 @@
         <activity
             android:name=".activity.RetrofitActivity"
             android:label="@string/title_activity_retrofit"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.RxAndroidActivity"
+            android:label="@string/title_activity_rx_android"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

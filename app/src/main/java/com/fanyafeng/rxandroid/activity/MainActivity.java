@@ -24,8 +24,6 @@ import retrofit.Retrofit;
 public class MainActivity extends BaseActivity {
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +57,9 @@ public class MainActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.btnRetrofit:
                 startActivity(new Intent(this, RetrofitActivity.class));
+                break;
+            case R.id.btnRxAndroid:
+                startActivity(new Intent(this, RxAndroidActivity.class));
                 break;
         }
     }
