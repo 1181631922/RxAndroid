@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.fanyafeng.rxandroid.BaseActivity;
 import com.fanyafeng.rxandroid.R;
+import com.fanyafeng.rxandroid.hong9.activity.RedWineActivity;
 import com.fanyafeng.rxandroid.netutil.Urls;
 import com.fanyafeng.rxandroid.retrofit.response.TaoBaoGetIpInfoResponse;
 import com.fanyafeng.rxandroid.retrofit.service.ApiService;
@@ -60,6 +61,9 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.btnRxAndroid:
                 startActivity(new Intent(this, RxAndroidActivity.class));
+                break;
+            case R.id.btnRedWine:
+                startActivity(new Intent(this, RedWineActivity.class));
                 break;
         }
     }

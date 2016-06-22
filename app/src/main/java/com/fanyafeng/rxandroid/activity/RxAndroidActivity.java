@@ -1,5 +1,6 @@
 package com.fanyafeng.rxandroid.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -40,6 +41,8 @@ public class RxAndroidActivity extends BaseActivity {
     private void initData() {
         hello("Fan", "Ya", "Feng");
         hello("Beijing", "Chaoyang");
+
+
     }
 
     public static void hello(String... names) {
@@ -51,4 +54,19 @@ public class RxAndroidActivity extends BaseActivity {
         });
     }
 
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+        switch (v.getId()) {
+            case R.id.btnToAndroid:
+                startActivity(new Intent(this, RxToActivity.class));
+                break;
+            case R.id.btnRxDeal:
+                startActivity(new Intent(this, RxDealDataActivity.class));
+                break;
+            case R.id.btnLambda:
+                startActivity(new Intent(this, LambdaActivity.class));
+                break;
+        }
+    }
 }

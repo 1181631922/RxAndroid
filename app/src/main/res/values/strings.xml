@@ -4,4 +4,8 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_retrofit">RetrofitActivity</string>
     <string name="title_activity_rx_android">RxAndroidActivity</string>
+    <string name="title_activity_rx_to">RxToActivity</string>
+    <string name="title_activity_rx_deal_data">RxDealDataActivity</string>
+    <string name="title_activity_zhi_hu">ZhiHuActivity</string>
+    <string name="title_activity_lambda">LambdaActivity</string>
 </resources>

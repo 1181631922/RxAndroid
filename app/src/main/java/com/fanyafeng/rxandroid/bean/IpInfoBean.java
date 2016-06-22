@@ -42,6 +42,9 @@ public class IpInfoBean implements Parcelable{
     public String isp_id;
     public String ip;
 
+    public IpInfoBean() {
+    }
+
     protected IpInfoBean(Parcel in) {
         country = in.readString();
         country_id = in.readString();
