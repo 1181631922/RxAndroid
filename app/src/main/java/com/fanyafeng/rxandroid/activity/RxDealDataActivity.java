@@ -64,17 +64,17 @@ public class RxDealDataActivity extends BaseActivity {
     }
 
     private void initData() {
-        Observable<String> observable = Observable.just(saySomeThing());
-        observable.observeOn(AndroidSchedulers.mainThread()).map(upperLetterFunc).subscribe(textAction);
+//        Observable<String> observable = Observable.just(saySomeThing());
+//        observable.observeOn(AndroidSchedulers.mainThread()).map(upperLetterFunc).subscribe(textAction);
 
         Observable<String> observableMap = Observable.from(wordList);
         observableMap.observeOn(AndroidSchedulers.mainThread()).map(upperLetterFunc).subscribe(textAction);
 
-        Observable.just(stringList)
-                .observeOn(AndroidSchedulers.mainThread())
-                .flatMap(oneLetterFunc)
-                .reduce(mergeStrinFunc)
-                .subscribe(toastAction);
+//        Observable.just(stringList)
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .flatMap(oneLetterFunc)
+//                .reduce(mergeStrinFunc)
+//                .subscribe(toastAction);
 
         testIpInfo();
     }
@@ -98,7 +98,7 @@ public class RxDealDataActivity extends BaseActivity {
     private Action1<String> textAction = new Action1<String>() {
         @Override
         public void call(String s) {
-            tvDealData.setText(s);
+            tvDealData.setText(tvDealData.getText().toString() + s);
         }
     };
 

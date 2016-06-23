@@ -15,6 +15,9 @@ import com.fanyafeng.rxandroid.R;
 import java.util.Arrays;
 import java.util.List;
 
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+
 public class LambdaActivity extends BaseActivity {
     private TextView tvLambda;
 
@@ -43,7 +46,9 @@ public class LambdaActivity extends BaseActivity {
     }
 
     private void initData() {
-
+        Observable<String> observable=Observable.just(saySomething());
+        observable.observeOn(AndroidSchedulers.mainThread())
+                .map(String::toUpperCase).subscribe(tvLambda::setText);
     }
 
     private String saySomething() {

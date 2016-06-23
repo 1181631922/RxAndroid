@@ -1,5 +1,6 @@
 package com.fanyafeng.rxandroid.hong9.activity;
 
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,6 +13,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -21,11 +24,13 @@ import android.widget.Toast;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.fanyafeng.rxandroid.BaseActivity;
 import com.fanyafeng.rxandroid.R;
+import com.fanyafeng.rxandroid.adapter.RVAdapter;
+import com.fanyafeng.rxandroid.hong9.bean.ProductBean;
 import com.fanyafeng.rxandroid.hong9.fragment.ViewPagerFragment;
 import com.fanyafeng.rxandroid.hong9.network.Urls;
 import com.fanyafeng.rxandroid.hong9.response.GetMainResponse;
+import com.fanyafeng.rxandroid.hong9.service.ApiService;
 import com.fanyafeng.rxandroid.retrofit.response.TaoBaoGetIpInfoResponse;
-import com.fanyafeng.rxandroid.retrofit.service.ApiService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +53,14 @@ public class RedWineActivity extends BaseActivity {
             "http://img3.imgtn.bdimg.com/it/u=270179915,2007129802&fm=21&gp=0.jpg",
             "http://img3.imgtn.bdimg.com/it/u=1255836822,4097950891&fm=21&gp=0.jpg"};
 
+    private final static String headerUri = "http://vinos.b0.upaiyun.com/avatar/default/0247662e-21bf-4662-89fd-d7ebc0600a4e.jpg";
+
+    private RVAdapter rvAdapter;
+    private RecyclerView rvRedWine;
+    private List<ProductBean> productBeanList = new ArrayList<>();
+
     private SimpleDraweeView sdvDrawerHead;
+    private SimpleDraweeView sdvUserHead;
     private DrawerLayout layoutDrawer;
     private NavigationView layoutNavigationView;
 
@@ -73,42 +85,42 @@ public class RedWineActivity extends BaseActivity {
     }
 
     private void initView() {
+        rvRedWine = (RecyclerView) findViewById(R.id.rvRedWine);
+
         layoutDrawer = (DrawerLayout) findViewById(R.id.layoutDrawer);
         layoutNavigationView = (NavigationView) findViewById(R.id.layoutNavigationView);
         staggerViewpager = (ViewPager) findViewById(R.id.staggerViewpager);
         fragmentList = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            ViewPagerFragment viewPagerFragment = new ViewPagerFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString("img", imgList[i]);
-            viewPagerFragment.setArguments(bundle);
-            fragmentList.add(viewPagerFragment);
-        }
-        staggerViewpager.setAdapter(new PagerAdapter(getSupportFragmentManager(), fragmentList));
-        staggerViewpager.setCurrentItem(0);
-        initBannerView();
+        initMainData();
     }
 
     private void initData() {
+        rvAdapter = new RVAdapter(this, productBeanList);
+        rvRedWine.setHasFixedSize(true);
+        rvRedWine.setLayoutManager(new GridLayoutManager(this, 2));
+        rvRedWine.setAdapter(rvAdapter);
         layoutNavigationView.inflateHeaderView(R.layout.layout_drawer_head);
         sdvDrawerHead = (SimpleDraweeView) layoutNavigationView.getHeaderView(0).findViewById(R.id.sdvDrawerHead);
         sdvDrawerHead.setImageURI(Uri.parse(imageUri));
         sdvDrawerHead.setAspectRatio(1.33f);
+        sdvUserHead = (SimpleDraweeView) layoutNavigationView.getHeaderView(0).findViewById(R.id.sdvUserHead);
+        sdvUserHead.setImageURI(Uri.parse(headerUri));
+        sdvUserHead.setAspectRatio(1.0f);
         layoutNavigationView.inflateMenu(R.menu.menu_drawer_nav);
         onMenuCheck(layoutNavigationView);
     }
 
-    private void initBannerView() {
+    private void initMainData() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(com.fanyafeng.rxandroid.netutil.Urls.URL_TAOBAO_BASET)
+                .baseUrl(Urls.HTTP_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
         ApiService apiService = retrofit.create(ApiService.class);
-        apiService.getIpinfoBean("63.223.108.42")
+        apiService.getMainData()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<TaoBaoGetIpInfoResponse>() {
+                .subscribe(new Subscriber<GetMainResponse>() {
                     @Override
                     public void onCompleted() {
 
@@ -120,9 +132,21 @@ public class RedWineActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void onNext(TaoBaoGetIpInfoResponse taoBaoGetIpInfoResponse) {
-                        toolbar.setTitle(taoBaoGetIpInfoResponse.data.country);
-                        Log.d("redwine", taoBaoGetIpInfoResponse.data.country);
+                    public void onNext(GetMainResponse getMainResponse) {
+                        Log.d("redwine", "请求成功：" + getMainResponse.state);
+                        Log.d("redwine", "请求成功：" + getMainResponse.data.banner.get(0).id + "数组长度：" + getMainResponse.data.banner.size());
+                        Log.d("redwine", "请求成功：" + getMainResponse.data.products.get(0).cn_name);
+                        productBeanList.addAll(getMainResponse.data.products);
+                        rvAdapter.notifyDataSetChanged();
+                        for (int i = 0; i < getMainResponse.data.banner.size(); i++) {
+                            ViewPagerFragment viewPagerFragment = new ViewPagerFragment();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("img", getMainResponse.data.banner.get(i).img);
+                            viewPagerFragment.setArguments(bundle);
+                            fragmentList.add(viewPagerFragment);
+                        }
+                        staggerViewpager.setAdapter(new PagerAdapter(getSupportFragmentManager(), fragmentList));
+                        staggerViewpager.setCurrentItem(0);
                     }
                 });
     }

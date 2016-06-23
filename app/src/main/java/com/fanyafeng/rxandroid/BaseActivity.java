@@ -10,7 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-public class BaseActivity extends AppCompatActivity implements View.OnClickListener{
+public class BaseActivity extends AppCompatActivity implements View.OnClickListener {
 
     protected Toolbar toolbar;
     protected FloatingActionButton fab;
@@ -22,6 +22,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     protected String title;
     protected String centertitle;
     protected String subtitle;
+    protected int titleColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,10 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
             if (title != null && !title.equals("")) {
                 toolbar.setTitle(title);
+            }
+
+            if (titleColor != 0) {
+                toolbar.setTitleTextColor(titleColor);
             }
 
             if (subtitle != null && !subtitle.equals("")) {

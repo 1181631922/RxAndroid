@@ -49,6 +49,10 @@
         <activity
             android:name=".activity.LambdaActivity"
             android:label="@string/title_activity_lambda"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.MainWineActivity"
+            android:label="@string/title_activity_main_wine"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

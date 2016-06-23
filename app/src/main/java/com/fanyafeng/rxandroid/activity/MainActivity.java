@@ -65,6 +65,9 @@ public class MainActivity extends BaseActivity {
             case R.id.btnRedWine:
                 startActivity(new Intent(this, RedWineActivity.class));
                 break;
+            case R.id.btnMainWine:
+                startActivity(new Intent(this, MainWineActivity.class));
+                break;
         }
     }
 

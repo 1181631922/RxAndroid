@@ -79,7 +79,7 @@ public class ViewPagerFragment extends Fragment {
 
     private void initView() {
         itemViewpager = (SimpleDraweeView) view.findViewById(R.id.itemViewpager);
-        itemViewpager.setAspectRatio(1.6024f);
+        itemViewpager.setAspectRatio(1.11607f);
         itemViewpager.setImageURI(Uri.parse(mParam1));
 //
 //        ControllerListenerUtil.setControllerListener(itemViewpager, mParam1, MyUtils.getScreenWidth(getActivity()), getActivity());
