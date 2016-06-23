@@ -21,7 +21,7 @@ import rx.android.schedulers.AndroidSchedulers;
 public class LambdaActivity extends BaseActivity {
     private TextView tvLambda;
 
-    String[] manyWords = {"My", "name", "is"};
+    String[] manyWords = {"My", "name", "is","fanyafeng"};
     List<String> manyWordList = Arrays.asList(manyWords);
 
     @Override
@@ -42,14 +42,28 @@ public class LambdaActivity extends BaseActivity {
     }
 
     private void initView() {
-        tvLambda= (TextView) findViewById(R.id.tvLambda);
+        tvLambda = (TextView) findViewById(R.id.tvLambda);
     }
 
     private void initData() {
-        Observable<String> observable=Observable.just(saySomething());
-        observable.observeOn(AndroidSchedulers.mainThread())
-                .map(String::toUpperCase).subscribe(tvLambda::setText);
+
     }
+
+    private void setTvLambdaText() {
+        Observable<String> observable = Observable.just(saySomething());
+        observable.observeOn(AndroidSchedulers.mainThread())
+                .map(String::toUpperCase)
+                .subscribe(tvLambda::setText);//java8
+    }
+
+    private void setMapText() {
+        Observable.just(manyWordList)
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(Observable::from)
+                .reduce(this::mergeStrin)
+                .subscribe(this::showToast);
+    }
+
 
     private String saySomething() {
         return "Hello,I am your friend";
@@ -63,4 +77,16 @@ public class LambdaActivity extends BaseActivity {
         return String.format("%s %s", s1, s2);
     }
 
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+        switch (v.getId()) {
+            case R.id.btnSetText:
+                setTvLambdaText();
+                break;
+            case R.id.btnSetMap:
+                setMapText();
+                break;
+        }
+    }
 }
