@@ -67,9 +67,8 @@ public class RxDealDataActivity extends BaseActivity {
 //        Observable<String> observable = Observable.just(saySomeThing());
 //        observable.observeOn(AndroidSchedulers.mainThread()).map(upperLetterFunc).subscribe(textAction);
 
-        Observable<String> observableMap = Observable.from(wordList);
-        observableMap.observeOn(AndroidSchedulers.mainThread()).map(upperLetterFunc).subscribe(textAction);
-
+//        Observable<String> observableMap = Observable.from(wordList);
+//        observableMap.observeOn(AndroidSchedulers.mainThread()).map(upperLetterFunc).subscribe(textAction);
 //        Observable.just(stringList)
 //                .observeOn(AndroidSchedulers.mainThread())
 //                .flatMap(oneLetterFunc)
@@ -86,8 +85,10 @@ public class RxDealDataActivity extends BaseActivity {
             ipInfoBean.setCountry("中国北京");
             ipInfoBeanList.add(ipInfoBean);
         }
-        Observable<IpInfoBean> ipInfoBeanObservable = Observable.from(ipInfoBeanList);
-//        ipInfoBeanObservable.observeOn(AndroidSchedulers.mainThread()).map(ipInfoFunc).subscribe(ipInfoBeanAction1);
+        Observable.just(ipInfoBeanList)
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(getIpInfoFunc)
+                .subscribe(ipInfoToastAction);
     }
 
     private String saySomeThing() {
@@ -116,10 +117,24 @@ public class RxDealDataActivity extends BaseActivity {
         }
     };
 
+    private Action1<IpInfoBean> ipInfoToastAction = new Action1<IpInfoBean>() {
+        @Override
+        public void call(IpInfoBean ipInfoBean) {
+            Toast.makeText(RxDealDataActivity.this, ipInfoBean.country, Toast.LENGTH_SHORT).show();
+        }
+    };
+
     private Func1<List<String>, Observable<String>> oneLetterFunc = new Func1<List<String>, Observable<String>>() {
         @Override
         public Observable<String> call(List<String> strings) {
             return Observable.from(strings);
+        }
+    };
+
+    private Func1<List<IpInfoBean>, Observable<IpInfoBean>> getIpInfoFunc = new Func1<List<IpInfoBean>, Observable<IpInfoBean>>() {
+        @Override
+        public Observable<IpInfoBean> call(List<IpInfoBean> ipInfoBeen) {
+            return Observable.from(ipInfoBeen);
         }
     };
 

@@ -25,6 +25,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.fanyafeng.rxandroid.BaseActivity;
 import com.fanyafeng.rxandroid.R;
 import com.fanyafeng.rxandroid.adapter.RVAdapter;
+import com.fanyafeng.rxandroid.hong9.bean.BannerBean;
 import com.fanyafeng.rxandroid.hong9.bean.ProductBean;
 import com.fanyafeng.rxandroid.hong9.fragment.ViewPagerFragment;
 import com.fanyafeng.rxandroid.hong9.network.Urls;
@@ -42,6 +43,7 @@ import rx.Observable;
 import rx.Scheduler;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 public class LambdaRedWineActivity extends BaseActivity {
@@ -67,6 +69,7 @@ public class LambdaRedWineActivity extends BaseActivity {
 
     private List<Fragment> fragmentList;
     private ViewPager staggerViewpager;
+    private PagerAdapter pagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +95,7 @@ public class LambdaRedWineActivity extends BaseActivity {
         layoutNavigationView = (NavigationView) findViewById(R.id.layoutNavigationView);
         staggerViewpager = (ViewPager) findViewById(R.id.staggerViewpager);
         fragmentList = new ArrayList<>();
+        pagerAdapter = new PagerAdapter(getSupportFragmentManager(), fragmentList);
         initMainData();
     }
 
@@ -139,17 +143,37 @@ public class LambdaRedWineActivity extends BaseActivity {
                         Log.d("redwine", "请求成功：" + getMainResponse.data.products.get(0).cn_name);
                         productBeanList.addAll(getMainResponse.data.products);
                         rvAdapter.notifyDataSetChanged();
-                        for (int i = 0; i < getMainResponse.data.banner.size(); i++) {
-                            ViewPagerFragment viewPagerFragment = new ViewPagerFragment();
-                            Bundle bundle = new Bundle();
-                            bundle.putString("img", getMainResponse.data.banner.get(i).img);
-                            viewPagerFragment.setArguments(bundle);
-                            fragmentList.add(viewPagerFragment);
-                        }
+//                        for (int i = 0; i < getMainResponse.data.banner.size(); i++) {
+//                            ViewPagerFragment viewPagerFragment = new ViewPagerFragment();
+//                            Bundle bundle = new Bundle();
+//                            bundle.putString("img", getMainResponse.data.banner.get(i).img);
+//                            viewPagerFragment.setArguments(bundle);
+//                            fragmentList.add(viewPagerFragment);
+//                        }
+//                        staggerViewpager.setAdapter(new PagerAdapter(getSupportFragmentManager(), fragmentList));
+//                        staggerViewpager.setCurrentItem(0);
+
+                        Observable.just(getMainResponse.data.banner)//相当于.next
+//                                .subscribeOn(Schedulers.newThread())//订阅在子线程
+                                .observeOn(AndroidSchedulers.mainThread())//观察在主线程
+                                .flatMap(Observable::from)
+                                .subscribe(LambdaRedWineActivity.this::bindViewpager);
                         staggerViewpager.setAdapter(new PagerAdapter(getSupportFragmentManager(), fragmentList));
+                        Log.d("lambda", "适配器，fragmentList长度：" + fragmentList.size());
                         staggerViewpager.setCurrentItem(0);
                     }
                 });
+    }
+
+    private void bindViewpager(BannerBean bannerBean) {
+
+        ViewPagerFragment viewPagerFragment = new ViewPagerFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("img", bannerBean.img);
+        viewPagerFragment.setArguments(bundle);
+        fragmentList.add(viewPagerFragment);
+        pagerAdapter.notifyDataSetChanged();
+        Log.d("lambda", "fragmentList长度：" + fragmentList.size());
     }
 
     private void onMenuCheck(NavigationView navigationView) {

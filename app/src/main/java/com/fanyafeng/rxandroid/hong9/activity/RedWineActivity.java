@@ -133,9 +133,9 @@ public class RedWineActivity extends BaseActivity {
 
                     @Override
                     public void onNext(GetMainResponse getMainResponse) {
-                        Log.d("redwine", "请求成功：" + getMainResponse.state);
-                        Log.d("redwine", "请求成功：" + getMainResponse.data.banner.get(0).id + "数组长度：" + getMainResponse.data.banner.size());
-                        Log.d("redwine", "请求成功：" + getMainResponse.data.products.get(0).cn_name);
+//                        Log.d("redwine", "请求成功：" + getMainResponse.state);
+//                        Log.d("redwine", "请求成功：" + getMainResponse.data.banner.get(0).id + "数组长度：" + getMainResponse.data.banner.size());
+//                        Log.d("redwine", "请求成功：" + getMainResponse.data.products.get(0).cn_name);
                         productBeanList.addAll(getMainResponse.data.products);
                         rvAdapter.notifyDataSetChanged();
                         for (int i = 0; i < getMainResponse.data.banner.size(); i++) {
