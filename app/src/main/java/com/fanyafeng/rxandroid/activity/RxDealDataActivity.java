@@ -82,7 +82,7 @@ public class RxDealDataActivity extends BaseActivity {
         ipInfoBeanList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             IpInfoBean ipInfoBean = new IpInfoBean();
-            ipInfoBean.setCountry("中国北京");
+            ipInfoBean.setCountry("中国北京" + i);
             ipInfoBeanList.add(ipInfoBean);
         }
         Observable.just(ipInfoBeanList)
@@ -117,12 +117,7 @@ public class RxDealDataActivity extends BaseActivity {
         }
     };
 
-    private Action1<IpInfoBean> ipInfoToastAction = new Action1<IpInfoBean>() {
-        @Override
-        public void call(IpInfoBean ipInfoBean) {
-            Toast.makeText(RxDealDataActivity.this, ipInfoBean.country, Toast.LENGTH_SHORT).show();
-        }
-    };
+    private Action1<IpInfoBean> ipInfoToastAction = ipInfoBean -> Toast.makeText(RxDealDataActivity.this, ipInfoBean.country, Toast.LENGTH_SHORT).show();
 
     private Func1<List<String>, Observable<String>> oneLetterFunc = new Func1<List<String>, Observable<String>>() {
         @Override
@@ -131,12 +126,7 @@ public class RxDealDataActivity extends BaseActivity {
         }
     };
 
-    private Func1<List<IpInfoBean>, Observable<IpInfoBean>> getIpInfoFunc = new Func1<List<IpInfoBean>, Observable<IpInfoBean>>() {
-        @Override
-        public Observable<IpInfoBean> call(List<IpInfoBean> ipInfoBeen) {
-            return Observable.from(ipInfoBeen);
-        }
-    };
+    private Func1<List<IpInfoBean>, Observable<IpInfoBean>> getIpInfoFunc = ipInfoBeen -> Observable.from(ipInfoBeen);
 
     private Func1<List<IpInfoBean>, Observable<IpInfoBean>> ipInfoFunc = new Func1<List<IpInfoBean>, Observable<IpInfoBean>>() {
         @Override
@@ -146,12 +136,7 @@ public class RxDealDataActivity extends BaseActivity {
     };
 
     //处理数据
-    private Func1<String, String> upperLetterFunc = new Func1<String, String>() {
-        @Override
-        public String call(String s) {
-            return s.toUpperCase();
-        }
-    };
+    private Func1<String, String> upperLetterFunc = s -> s.toUpperCase();
 
     private Func2<String, String, String> mergeStrinFunc = new Func2<String, String, String>() {
         @Override
