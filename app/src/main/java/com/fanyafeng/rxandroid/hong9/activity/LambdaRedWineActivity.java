@@ -44,6 +44,7 @@ import rx.Observer;
 import rx.Scheduler;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
@@ -78,13 +79,8 @@ public class LambdaRedWineActivity extends BaseActivity {
         setContentView(R.layout.activity_red_wine);
         title = "红酒";
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show());
         initView();
         initData();
     }
@@ -129,30 +125,19 @@ public class LambdaRedWineActivity extends BaseActivity {
         apiService.getMainData()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<GetMainResponse>() {
-                    @Override
-                    public void onCompleted() {
+                .subscribe(getMainResponse -> {
+                    Log.d("redwine", "请求成功：" + getMainResponse.state);
+                    Log.d("redwine", "请求成功：" + getMainResponse.data.banner.get(0).id + "数组长度：" + getMainResponse.data.banner.size());
+                    Log.d("redwine", "请求成功：" + getMainResponse.data.products.get(0).cn_name);
+                    productBeanList.addAll(getMainResponse.data.products);
+                    rvAdapter.notifyDataSetChanged();
 
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(GetMainResponse getMainResponse) {
-                        Log.d("redwine", "请求成功：" + getMainResponse.state);
-                        Log.d("redwine", "请求成功：" + getMainResponse.data.banner.get(0).id + "数组长度：" + getMainResponse.data.banner.size());
-                        Log.d("redwine", "请求成功：" + getMainResponse.data.products.get(0).cn_name);
-                        productBeanList.addAll(getMainResponse.data.products);
-                        rvAdapter.notifyDataSetChanged();
-
-                        Observable.just(getMainResponse.data.banner)//相当于.next
-                                .observeOn(AndroidSchedulers.mainThread())//观察在主线程
-                                .flatMap(Observable::from)
-                                .subscribe(LambdaRedWineActivity.this::bindViewpager);
-                    }
+                    Observable.just(getMainResponse.data.banner)//相当于.next
+                            .observeOn(AndroidSchedulers.mainThread())//观察在主线程
+                            .flatMap(Observable::from)
+                            .subscribe(LambdaRedWineActivity.this::bindViewpager);
+                }, throwable -> {//必须是抛出异常的方法
+                    Log.d("redwine", "异常：" + throwable.toString());
                 });
     }
 
@@ -168,24 +153,21 @@ public class LambdaRedWineActivity extends BaseActivity {
     }
 
     private void onMenuCheck(NavigationView navigationView) {
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.nav_menu_home:
-                        Toast.makeText(LambdaRedWineActivity.this, "点击第一个", Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.nav_menu_categories:
-                        break;
-                    case R.id.nav_menu_feedback:
-                        break;
-                    case R.id.nav_menu_setting:
-                        break;
-                }
-                item.setChecked(true);
-                layoutDrawer.closeDrawers();
-                return true;
+        navigationView.setNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.nav_menu_home:
+                    Toast.makeText(LambdaRedWineActivity.this, "点击第一个", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.nav_menu_categories:
+                    break;
+                case R.id.nav_menu_feedback:
+                    break;
+                case R.id.nav_menu_setting:
+                    break;
             }
+            item.setChecked(true);
+            layoutDrawer.closeDrawers();
+            return true;
         });
     }
 
