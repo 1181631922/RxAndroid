@@ -67,6 +67,9 @@ public class RxAndroidActivity extends BaseActivity {
             case R.id.btnLambda:
                 startActivity(new Intent(this, LambdaActivity.class));
                 break;
+            case R.id.btnNetArgs:
+                startActivity(new Intent(this, NetArgsActivity.class));
+                break;
         }
     }
 }

@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.fanyafeng.rxandroid.BaseActivity;
 import com.fanyafeng.rxandroid.R;
+import com.fanyafeng.rxandroid.hong9.interceptor.OkHttpInterceptor;
 import com.fanyafeng.rxandroid.hong9.network.Urls;
 import com.fanyafeng.rxandroid.hong9.response.GetMainResponse;
 import com.fanyafeng.rxandroid.hong9.service.ApiService;
@@ -57,11 +58,12 @@ public class MainWineActivity extends BaseActivity {
     private void getData() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Urls.HTTP_URL)
+                .client(OkHttpInterceptor.getHttpClient())
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
         ApiService apiService = retrofit.create(ApiService.class);
-        apiService.getMainData()
+        apiService.getHeaderMainData("Android vino", "gzip")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<GetMainResponse>() {

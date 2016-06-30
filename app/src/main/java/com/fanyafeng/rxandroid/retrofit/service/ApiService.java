@@ -15,6 +15,10 @@ public interface ApiService {
     @GET("/service/getIpInfo.php")
     Call<TaoBaoGetIpInfoResponse> getIpInfoBean(@Query("ip") String ip);
 
-    @GET("/service/getIpInfo.php")
-    Observable<TaoBaoGetIpInfoResponse> getIpinfoBean(@Query("ip") String ip);
+    //    下方测试
+    @GET("/token")
+    Observable<String> getToken();
+
+    @GET("/user")
+    Observable<TaoBaoGetIpInfoResponse> getIpinfoBean(@Query("token") String token, @Query("ip") String ip);
 }

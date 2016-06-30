@@ -27,6 +27,7 @@ import com.fanyafeng.rxandroid.R;
 import com.fanyafeng.rxandroid.adapter.RVAdapter;
 import com.fanyafeng.rxandroid.hong9.bean.ProductBean;
 import com.fanyafeng.rxandroid.hong9.fragment.ViewPagerFragment;
+import com.fanyafeng.rxandroid.hong9.interceptor.OkHttpInterceptor;
 import com.fanyafeng.rxandroid.hong9.network.Urls;
 import com.fanyafeng.rxandroid.hong9.response.GetMainResponse;
 import com.fanyafeng.rxandroid.hong9.service.ApiService;
@@ -113,6 +114,7 @@ public class RedWineActivity extends BaseActivity {
     private void initMainData() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Urls.HTTP_URL)
+                .client(OkHttpInterceptor.getHttpClient())
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();

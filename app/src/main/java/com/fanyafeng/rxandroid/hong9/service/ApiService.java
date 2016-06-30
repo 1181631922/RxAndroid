@@ -6,6 +6,8 @@ import com.fanyafeng.rxandroid.hong9.response.GetMainResponse;
 
 import retrofit.Call;
 import retrofit.http.GET;
+import retrofit.http.Header;
+import retrofit.http.QueryMap;
 import rx.Observable;
 
 /**
@@ -14,4 +16,9 @@ import rx.Observable;
 public interface ApiService {
     @GET(Urls.MAIN_URL)
     Observable<GetMainResponse> getMainData();
+
+    @GET(Urls.MAIN_URL)
+//增加头
+    Observable<GetMainResponse> getHeaderMainData(@Header("User-Agent") String userAgent, @Header("Accept-encoding") String gzip);
+
 }
