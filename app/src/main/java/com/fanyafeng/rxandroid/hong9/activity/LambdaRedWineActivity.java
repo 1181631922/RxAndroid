@@ -133,7 +133,7 @@ public class LambdaRedWineActivity extends BaseActivity {
                             .subscribe(LambdaRedWineActivity.this::bindViewpager);
                 }, throwable -> {//必须是抛出异常的方法
                     Log.d("redwine", "异常：" + throwable.toString());
-                });
+                }, () -> Log.d("redwine", "fragmentList长度：" + fragmentList.size()));
     }
 
     private void bindViewpager(BannerBean bannerBean) {
