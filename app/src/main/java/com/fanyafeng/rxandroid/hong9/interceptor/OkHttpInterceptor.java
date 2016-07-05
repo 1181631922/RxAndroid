@@ -25,12 +25,12 @@ public class OkHttpInterceptor {
         return USER_AGENT;
     }
 
-    private static OkHttpClient okHttpClient;
+    private static OkHttpClient okHttpClient=new OkHttpClient();
 
     public static OkHttpClient getHttpClient() {
-        if (okHttpClient == null) {
-            okHttpClient = new OkHttpClient();
-        }
+//        if (okHttpClient == null) {
+//            okHttpClient = new OkHttpClient();
+//        }
         okHttpClient.interceptors().add(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
