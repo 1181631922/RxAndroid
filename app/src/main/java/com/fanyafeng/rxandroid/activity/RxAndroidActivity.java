@@ -2,6 +2,7 @@ package com.fanyafeng.rxandroid.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -51,6 +52,18 @@ public class RxAndroidActivity extends BaseActivity {
             public void call(String s) {
                 System.out.println("Hello " + s + "!");
             }
+        });
+
+        for (int i = 0; i < names.length; i++) {
+            System.out.println(names[i]);
+        }
+
+        for (String s : names) {
+            System.out.println(s);
+        }
+
+        Observable.from(names).subscribe(s -> {
+            System.out.println("Hello " + s + "!");
         });
     }
 

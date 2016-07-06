@@ -114,7 +114,7 @@ public class RedWineActivity extends BaseActivity {
     private void initMainData() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Urls.HTTP_URL)
-                .client(OkHttpInterceptor.getHttpClient())
+//                .client(OkHttpInterceptor.getHttpClient())
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();

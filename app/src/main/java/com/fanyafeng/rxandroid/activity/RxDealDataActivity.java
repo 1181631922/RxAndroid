@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.functions.Func2;
+import rx.schedulers.Schedulers;
 
 public class RxDealDataActivity extends BaseActivity {
 
@@ -61,11 +63,14 @@ public class RxDealDataActivity extends BaseActivity {
         tvDealData3 = (TextView) findViewById(R.id.tvDealData3);
         tvDealData4 = (TextView) findViewById(R.id.tvDealData4);
         tvDealData5 = (TextView) findViewById(R.id.tvDealData5);
+
     }
 
     private void initData() {
-//        Observable<String> observable = Observable.just(saySomeThing());
-//        observable.observeOn(AndroidSchedulers.mainThread()).map(upperLetterFunc).subscribe(textAction);
+        Observable<String> observable = Observable.just(saySomeThing());
+        observable.observeOn(AndroidSchedulers.mainThread())
+                .map(upperLetterFunc)
+                .subscribe(textAction);
 
 //        Observable<String> observableMap = Observable.from(wordList);
 //        observableMap.observeOn(AndroidSchedulers.mainThread()).map(upperLetterFunc).subscribe(textAction);
@@ -75,20 +80,6 @@ public class RxDealDataActivity extends BaseActivity {
 //                .reduce(mergeStrinFunc)
 //                .subscribe(toastAction);
 
-        testIpInfo();
-    }
-
-    private void testIpInfo() {
-        ipInfoBeanList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            IpInfoBean ipInfoBean = new IpInfoBean();
-            ipInfoBean.setCountry("中国北京" + i);
-            ipInfoBeanList.add(ipInfoBean);
-        }
-        Observable.just(ipInfoBeanList)
-                .observeOn(AndroidSchedulers.mainThread())
-                .flatMap(getIpInfoFunc)
-                .subscribe(ipInfoToastAction);
     }
 
     private String saySomeThing() {
@@ -128,6 +119,13 @@ public class RxDealDataActivity extends BaseActivity {
 
     private Func1<List<IpInfoBean>, Observable<IpInfoBean>> getIpInfoFunc = ipInfoBeen -> Observable.from(ipInfoBeen);
 
+//    private Func1<List<List<IpInfoBean>>,Observable<IpInfoBean>> ipInfoBeanObservableFunc1=new Func1<List<List<IpInfoBean>>, Observable<IpInfoBean>>() {
+//        @Override
+//        public Observable<IpInfoBean> call(List<List<IpInfoBean>> lists) {
+//            return Observable.just(lists);
+//        }
+//    };
+
     private Func1<List<IpInfoBean>, Observable<IpInfoBean>> ipInfoFunc = new Func1<List<IpInfoBean>, Observable<IpInfoBean>>() {
         @Override
         public Observable<IpInfoBean> call(List<IpInfoBean> ipInfoBeen) {
@@ -145,4 +143,74 @@ public class RxDealDataActivity extends BaseActivity {
         }
     };
 
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+        switch (v.getId()) {
+            case R.id.btnDealOperate:
+                testIpInfo();
+                break;
+        }
+    }
+
+    private void testIpInfo() {
+        ipInfoBeanList = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            IpInfoBean ipInfoBean = new IpInfoBean();
+            ipInfoBean.setCountry("中国北京" + i);
+            ipInfoBeanList.add(ipInfoBean);
+        }
+        Observable.just(ipInfoBeanList)
+                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.newThread())//默认在主线程，但是如果需要在主线程却在子线程定义的会报错
+                .flatMap(new Func1<List<IpInfoBean>, Observable<IpInfoBean>>() {
+                    @Override
+                    public Observable<IpInfoBean> call(List<IpInfoBean> ipInfoBeen) {
+                        return Observable.from(ipInfoBeen);
+                    }
+                })
+                .filter(new Func1<IpInfoBean, Boolean>() {//过滤器
+                    @Override
+                    public Boolean call(IpInfoBean ipInfoBean) {
+                        return ipInfoBean.getCountry().equals("中国北京0");
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())//决定subscribe线程
+                .flatMap(new Func1<IpInfoBean, Observable<IpInfoBean>>() {
+                    @Override
+                    public Observable<IpInfoBean> call(IpInfoBean ipInfoBean) {
+                        return Observable.just(ipInfoBean);
+                    }
+                })
+                .subscribe(new Action1<IpInfoBean>() {
+
+                    @Override
+                    public void call(IpInfoBean i) {
+                        Toast.makeText(RxDealDataActivity.this, i.country, Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void operate() {
+        ipInfoBeanList = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            IpInfoBean ipInfoBean = new IpInfoBean();
+            ipInfoBean.setCountry("中国北京" + i);
+            ipInfoBeanList.add(ipInfoBean);
+        }
+        Observable.just(ipInfoBeanList)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+//                .observeOn(Schedulers.newThread())默认在主线程，但是如果需要在主线程却在子线程定义的会报错
+                .flatMap(getIpInfoFunc)
+                .filter(new Func1<IpInfoBean, Boolean>() {//过滤器
+                    @Override
+                    public Boolean call(IpInfoBean ipInfoBean) {
+                        return ipInfoBean.getCountry().equals("中国北京0");
+                    }
+                })
+                .observeOn(Schedulers.io())
+                .subscribe(ipInfoToastAction);
+    }
 }
