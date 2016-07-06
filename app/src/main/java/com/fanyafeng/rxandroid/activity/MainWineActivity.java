@@ -63,9 +63,12 @@ public class MainWineActivity extends BaseActivity {
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
         ApiService apiService = retrofit.create(ApiService.class);
-        apiService.getHeaderMainData("Android vino", "gzip")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+        apiService
+                .getHeaderMainData("Android vino", "gzip")
+//                .getMainData()
+//                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.newThread())//网络请求，子线程
+                .observeOn(AndroidSchedulers.mainThread())//更新ui等，主线程
                 .subscribe(new Subscriber<GetMainResponse>() {
                     @Override
                     public void onCompleted() {

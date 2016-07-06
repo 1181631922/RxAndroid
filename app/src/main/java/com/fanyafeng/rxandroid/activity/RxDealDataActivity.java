@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -67,10 +68,10 @@ public class RxDealDataActivity extends BaseActivity {
     }
 
     private void initData() {
-        Observable<String> observable = Observable.just(saySomeThing());
-        observable.observeOn(AndroidSchedulers.mainThread())
-                .map(upperLetterFunc)
-                .subscribe(textAction);
+//        Observable<String> observable = Observable.just(saySomeThing());
+//        observable.observeOn(AndroidSchedulers.mainThread())
+//                .map(upperLetterFunc)
+//                .subscribe(textAction);
 
 //        Observable<String> observableMap = Observable.from(wordList);
 //        observableMap.observeOn(AndroidSchedulers.mainThread()).map(upperLetterFunc).subscribe(textAction);
@@ -119,12 +120,6 @@ public class RxDealDataActivity extends BaseActivity {
 
     private Func1<List<IpInfoBean>, Observable<IpInfoBean>> getIpInfoFunc = ipInfoBeen -> Observable.from(ipInfoBeen);
 
-//    private Func1<List<List<IpInfoBean>>,Observable<IpInfoBean>> ipInfoBeanObservableFunc1=new Func1<List<List<IpInfoBean>>, Observable<IpInfoBean>>() {
-//        @Override
-//        public Observable<IpInfoBean> call(List<List<IpInfoBean>> lists) {
-//            return Observable.just(lists);
-//        }
-//    };
 
     private Func1<List<IpInfoBean>, Observable<IpInfoBean>> ipInfoFunc = new Func1<List<IpInfoBean>, Observable<IpInfoBean>>() {
         @Override
@@ -136,9 +131,17 @@ public class RxDealDataActivity extends BaseActivity {
     //处理数据
     private Func1<String, String> upperLetterFunc = s -> s.toUpperCase();
 
+    private Func2<String, String, String> upperFunc = new Func2<String, String, String>() {
+        @Override
+        public String call(String s, String s2) {
+            return s.toUpperCase() + s2.toUpperCase();
+        }
+    };
+
     private Func2<String, String, String> mergeStrinFunc = new Func2<String, String, String>() {
         @Override
         public String call(String s, String s2) {
+            Log.d("rxdeal", "s和s2分别为：" + s + " | " + s2);//将listmerge
             return String.format("%s %s", s, s2);
         }
     };
@@ -150,7 +153,82 @@ public class RxDealDataActivity extends BaseActivity {
             case R.id.btnDealOperate:
                 testIpInfo();
                 break;
+            case R.id.btnDealOperate2:
+                operate2();
+                break;
+            case R.id.btnDealOperate3:
+                operate3();
+                break;
+            case R.id.btnDealOperate4:
+                operate4();
+                break;
         }
+    }
+
+    private void operate4(){
+        Observable.just(stringList)
+//                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.newThread())
+                .flatMap(new Func1<List<String>, Observable<String>>() {
+                    @Override
+                    public Observable<String> call(List<String> strings) {
+                        return Observable.from(strings);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .reduce(new Func2<String, String, String>() {
+                    @Override
+                    public String call(String s, String s2) {
+                        return s.toUpperCase() + s2.toUpperCase();
+                    }
+                })
+                .observeOn(Schedulers.newThread())
+                .reduce(new Func2<String, String, String>() {
+                    @Override
+                    public String call(String s, String s2) {
+                        return String.format("%s %s", s, s2);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+                        Toast.makeText(RxDealDataActivity.this, s, Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void operate3() {
+        Observable.just(stringList)
+//                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.newThread())
+                .flatMap(new Func1<List<String>, Observable<String>>() {
+                    @Override
+                    public Observable<String> call(List<String> strings) {
+                        return Observable.from(strings);
+                    }
+                })
+                .observeOn(Schedulers.newThread())
+                .reduce(new Func2<String, String, String>() {
+                    @Override
+                    public String call(String s, String s2) {
+                        return s.toUpperCase() + s2.toUpperCase();
+                    }
+                })
+                .observeOn(Schedulers.newThread())
+                .reduce(new Func2<String, String, String>() {
+                    @Override
+                    public String call(String s, String s2) {
+                        return String.format("%s %s", s, s2);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+                        Toast.makeText(RxDealDataActivity.this, s, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void testIpInfo() {
@@ -192,7 +270,7 @@ public class RxDealDataActivity extends BaseActivity {
                 });
     }
 
-    private void operate() {
+    private void operate2() {
         ipInfoBeanList = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             IpInfoBean ipInfoBean = new IpInfoBean();
@@ -210,7 +288,7 @@ public class RxDealDataActivity extends BaseActivity {
                         return ipInfoBean.getCountry().equals("中国北京0");
                     }
                 })
-                .observeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())//线程使用要处理好，否则会crash
                 .subscribe(ipInfoToastAction);
     }
 }
