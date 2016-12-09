@@ -16,6 +16,7 @@ Rxandroid的观察者模式有三个回调方法（如果结合retrofit的话里
 * 是不是感觉代码变多了，再结合一下lambda表达式：
 ![lambda表达式helloworld](https://github.com/1181631922/RxAndroid/blob/master/ScreenShots/D451C372-C076-4102-8960-348790B136B6.png)<p>
 是不是有变简洁了，这个可以类比as的默认缩进
+
 # 来看一下源码，正好帮助自己理解一下
 ![rxandroid观察者源码](https://github.com/1181631922/RxAndroid/blob/master/ScreenShots/76EA1EC5-0ADC-4F9C-A39B-44F00905B2FB.png)<p>
 * 这个empty很有意思，来看下源码，这里采取的是单例的设模式
@@ -23,12 +24,14 @@ Rxandroid的观察者模式有三个回调方法（如果结合retrofit的话里
 * 再看一下onxxx里面的核心代码，你就知道为啥可以遍历了
 ![onxxx核心代码](https://github.com/1181631922/RxAndroid/blob/master/ScreenShots/F1DD21F2-F806-407C-94E7-0966F7279E4D.png)<p>
 看了下稍微有点失望，其实也是用的for，但是再去具体看的话里面又结合了观察者模式还有三个回调方法，这里建议大家自己看一下源代码。
+
 # 这里来看结合实例理解一下观察者和订阅者
 ![观察者](https://github.com/1181631922/RxAndroid/blob/master/ScreenShots/D5C020A9-FE11-42AE-8EB7-9CE8EEB43FA1.png)<p>
 ![订阅者](https://github.com/1181631922/RxAndroid/blob/master/ScreenShots/7559AD58-4377-44CC-AFCA-CD0741B77DC0.png)<p>
 * 这有段挺不错的代码，截取了一下
 ![示例1](https://github.com/1181631922/RxAndroid/blob/master/ScreenShots/52A85415-6ED3-4848-A522-FFF243276FFF.png)<p>
 ![示例2](https://github.com/1181631922/RxAndroid/blob/master/ScreenShots/FBB2E751-8164-4535-A3C7-D69B2A5DD33A.png)
+
 # 该说的基本都说了，现在你的心里估计还是一脸困惑，心里肯定再说有个毛用，先拿最简单的helloworld做个例子
 * 看一下实例
 ![简单实例](https://github.com/1181631922/RxAndroid/blob/master/ScreenShots/0B266737-8636-40FD-AF68-864D866C08B4.png)<p>
@@ -44,6 +47,7 @@ Rxandroid的观察者模式有三个回调方法（如果结合retrofit的话里
 这个包是rxjava里面的，其实io和newthread创建过程是一样的，但是prefix不一样，还有incrementandget也不一样，然后去里面翻了翻，结果是这样，也是意料之中吧，
 但是感觉写这个代码的人对性能要求挺高的，注意标红箭头的
 ![prefix](https://github.com/1181631922/RxAndroid/blob/master/ScreenShots/44197474-81E1-4FD7-AD8D-0D432F71F682.png)
+
 # 来看一些实例
 ![operate3](https://github.com/1181631922/RxAndroid/blob/master/ScreenShots/0ECE12B0-6DE5-4E42-9E33-8610D8A1A329.png)<p>
 ![operate4](https://github.com/1181631922/RxAndroid/blob/master/ScreenShots/0095E10C-DEC2-41EE-ADC3-9B4C041EA10D.png)<p>
@@ -52,6 +56,7 @@ Rxandroid的观察者模式有三个回调方法（如果结合retrofit的话里
 ![lift变换](https://github.com/1181631922/RxAndroid/blob/master/ScreenShots/344EE99E-88D4-47F3-9500-B1F05B5EC05D.png)<p>
 ![call](https://github.com/1181631922/RxAndroid/blob/master/ScreenShots/01CEA1B0-474C-4C9A-9CBD-C8603FE72C8F.png)<p>
 又仔细瞅了瞅，感觉这个方法很方便，而且根据方法名字就能知道他是做啥的，operator大家可以自己看源码。
+
 # 到此为止RxAndroid可以进行数据的处理了，再来就是加上网络请求，这里是和retrofit相结合的，rxandroid自己也可以，但是需要自定义callback，这里不细说了。
 从项目的应用角度说一下retrofit，其实就是okhttp的一个包装。
 retrofit有好多大神讲的很好了
@@ -60,6 +65,7 @@ retrofit有好多大神讲的很好了
 * [http://mp.weixin.qq.com/s?__biz=MzA5MzI3NjE2MA==&mid=2650236203&idx=1&sn=54938620ba067eb3d6224dacb9fcaa2e&scene=23&srcid=07054QMyYdc11tfSunhoYX7m#rd
 ](http://mp.weixin.qq.com/s?__biz=MzA5MzI3NjE2MA==&mid=2650236203&idx=1&sn=54938620ba067eb3d6224dacb9fcaa2e&scene=23&srcid=07054QMyYdc11tfSunhoYX7m#rd
 )
+
 # 再有就是对网络请求的数据解析
 * 这里使用的是gson，如果不进行注解的话，bean的字段需要与服务器返回的字段相同，并且类型需要对应
 ![getdata](https://github.com/1181631922/RxAndroid/blob/master/ScreenShots/5626D7DA-B433-4AC4-BE5B-CA640603BA8E.png)
