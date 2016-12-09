@@ -1,6 +1,12 @@
 # RxAndroid
 RxAndroid+Retrofit示例代码
 
+# 上一下gif图
+* ![1](https://github.com/1181631922/RxAndroid/blob/master/ScreenShots/rxandroid_simple_net.gif)<p>
+* ![2](https://github.com/1181631922/RxAndroid/blob/master/ScreenShots/rxandroid_simple_2.gif)<p>
+* ![3](https://github.com/1181631922/RxAndroid/blob/master/ScreenShots/rxandroid_simple_3.gif)<p>
+* ![4](https://github.com/1181631922/RxAndroid/blob/master/ScreenShots/rxandroid_simple_4.gif)<p>
+
 # 先看一下观察者模式：
 定义对象间的一（被观察者）种一对多（观察者）的依赖关系，当一个对象发生改变时，所有依赖于他的对象都能得到通知并被自动更新。<p>
 ![观察者模式示意图](https://github.com/1181631922/RxAndroid/blob/master/ScreenShots/B00D11AD-7B97-42A2-A04E-397256D75283.png)
