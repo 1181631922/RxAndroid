@@ -14,3 +14,12 @@ Rxandroid的观察者模式有三个回调方法（如果结合retrofit的话里
 * 先看一个简单的打印<p>
 ![helloworld的简单打印](https://github.com/1181631922/RxAndroid/blob/master/ScreenShots/FE9623A7-D9FB-468F-A82E-1B89F98E9D6B.png)<p>
 * 是不是感觉代码变多了，再结合一下lambda表达式：
+![lambda表达式helloworld](https://github.com/1181631922/RxAndroid/blob/master/ScreenShots/D451C372-C076-4102-8960-348790B136B6.png)<p>
+是不是有变简洁了，这个可以类比as的默认缩进
+<p>
+# 来看一下源码，正好帮助自己理解一下
+![rxandroid观察者源码](https://github.com/1181631922/RxAndroid/blob/master/ScreenShots/76EA1EC5-0ADC-4F9C-A39B-44F00905B2FB.png)<p>
+* 这个empty很有意思，来看下源码，这里采取的是单例的设模式
+![empty源码](https://github.com/1181631922/RxAndroid/blob/master/ScreenShots/DCDAE7B2-EA65-40CC-BEEF-459E159BB053.png)<p>
+* 再看一下onxxx里面的核心代码，你就知道为啥可以遍历了
+![onxxx核心代码]()
